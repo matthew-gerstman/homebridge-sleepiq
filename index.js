@@ -156,180 +156,180 @@ class SleepIQPlatform {
       }
       
       if (this.hasFoundation) {
-        // check if the foundation has outlets
-        try {
-          await this.snapi.outletStatus('1', ((data, err=null) => {
-            if (err) {
-              this.log.debug(data, err);
-            } else {
-              this.log.debug("right outletStatus result:", data);
-              let outletStatus = JSON.parse(data);
-              if(outletStatus.hasOwnProperty('Error')) {
-                if (outletStatus.Error.Code === 404) {
-                  this.log("No right outlet detected");
-                } else {
-                  this.log("Unknown error occurred when checking the right outlet status. See previous output for more details. If it persists, please report this incident at https://github.com/DeeeeLAN/homebridge-sleepiq/issues/new");
-                }
-              } else {
-                this.hasOutletRight = true
-              }
-            }
-          }).bind(this));
-        } catch(err) {
-          if (typeof err === 'string' || err instanceof String)
-            err = JSON.parse(err)
-          if (!(err.statusCode === 404)) {
-            this.log("Failed to retrieve right outlet status:", JSON.stringify(err));
-          }
-        }
+        // // check if the foundation has outlets
+        // try {
+        //   await this.snapi.outletStatus('1', ((data, err=null) => {
+        //     if (err) {
+        //       this.log.debug(data, err);
+        //     } else {
+        //       this.log.debug("right outletStatus result:", data);
+        //       let outletStatus = JSON.parse(data);
+        //       if(outletStatus.hasOwnProperty('Error')) {
+        //         if (outletStatus.Error.Code === 404) {
+        //           this.log("No right outlet detected");
+        //         } else {
+        //           this.log("Unknown error occurred when checking the right outlet status. See previous output for more details. If it persists, please report this incident at https://github.com/DeeeeLAN/homebridge-sleepiq/issues/new");
+        //         }
+        //       } else {
+        //         this.hasOutletRight = true
+        //       }
+        //     }
+        //   }).bind(this));
+        // } catch(err) {
+        //   if (typeof err === 'string' || err instanceof String)
+        //     err = JSON.parse(err)
+        //   if (!(err.statusCode === 404)) {
+        //     this.log("Failed to retrieve right outlet status:", JSON.stringify(err));
+        //   }
+        // }
 
-        try {
-          await this.snapi.outletStatus('2', ((data, err=null) => {
-            if (err) {
-              this.log.debug(data, err);
-            } else {
-              this.log.debug("left outletStatus result:", data);
-              let outletStatus = JSON.parse(data);
-              if(outletStatus.hasOwnProperty('Error')) {
-                if (outletStatus.Error.Code === 404) {
-                  this.log("No left outlet detected");
-                } else {
-                  this.log("Unknown error occurred when checking the left outlet status. See previous output for more details. If it persists, please report this incident at https://github.com/DeeeeLAN/homebridge-sleepiq/issues/new");
-                }
-              } else {
-                this.hasOutletLeft = true
-              }
-            }
-          }).bind(this));
-        } catch(err) {
-          if (typeof err === 'string' || err instanceof String)
-            err = JSON.parse(err)
-          if (!(err.statusCode === 404)) {
-            this.log("Failed to retrieve left outlet status:", JSON.stringify(err));
-          }
-        }
+        // try {
+        //   await this.snapi.outletStatus('2', ((data, err=null) => {
+        //     if (err) {
+        //       this.log.debug(data, err);
+        //     } else {
+        //       this.log.debug("left outletStatus result:", data);
+        //       let outletStatus = JSON.parse(data);
+        //       if(outletStatus.hasOwnProperty('Error')) {
+        //         if (outletStatus.Error.Code === 404) {
+        //           this.log("No left outlet detected");
+        //         } else {
+        //           this.log("Unknown error occurred when checking the left outlet status. See previous output for more details. If it persists, please report this incident at https://github.com/DeeeeLAN/homebridge-sleepiq/issues/new");
+        //         }
+        //       } else {
+        //         this.hasOutletLeft = true
+        //       }
+        //     }
+        //   }).bind(this));
+        // } catch(err) {
+        //   if (typeof err === 'string' || err instanceof String)
+        //     err = JSON.parse(err)
+        //   if (!(err.statusCode === 404)) {
+        //     this.log("Failed to retrieve left outlet status:", JSON.stringify(err));
+        //   }
+        // }
   
-        // check if the foundation has lightstrips
-        try {
-          await this.snapi.outletStatus('3', ((data, err=null) => {
-            if (err) {
-              this.log.debug(data, err);
-            } else {
-              this.log.debug("right lightstrip outletStatus result:", data);
-              let outletStatus = JSON.parse(data);
-              if(outletStatus.hasOwnProperty('Error')) {
-                if (outletStatus.Error.Code === 404) {
-                  this.log("No right lightstrip detected");
-                } else {
-                  this.log("Unknown error occurred when checking the right lightstrip status. See previous output for more details. If it persists, please report this incident at https://github.com/DeeeeLAN/homebridge-sleepiq/issues/new");
-                }
-              } else {
-                this.hasLightstripRight = true
-              }
-            }
-          }).bind(this));
-        } catch(err) {
-          if (typeof err === 'string' || err instanceof String)
-            err = JSON.parse(err)
-          if (!(err.statusCode === 404)) {
-            this.log("Failed to retrieve right lightstrip status:", JSON.stringify(err));
-          }
-        }
+        // // check if the foundation has lightstrips
+        // try {
+        //   await this.snapi.outletStatus('3', ((data, err=null) => {
+        //     if (err) {
+        //       this.log.debug(data, err);
+        //     } else {
+        //       this.log.debug("right lightstrip outletStatus result:", data);
+        //       let outletStatus = JSON.parse(data);
+        //       if(outletStatus.hasOwnProperty('Error')) {
+        //         if (outletStatus.Error.Code === 404) {
+        //           this.log("No right lightstrip detected");
+        //         } else {
+        //           this.log("Unknown error occurred when checking the right lightstrip status. See previous output for more details. If it persists, please report this incident at https://github.com/DeeeeLAN/homebridge-sleepiq/issues/new");
+        //         }
+        //       } else {
+        //         this.hasLightstripRight = true
+        //       }
+        //     }
+        //   }).bind(this));
+        // } catch(err) {
+        //   if (typeof err === 'string' || err instanceof String)
+        //     err = JSON.parse(err)
+        //   if (!(err.statusCode === 404)) {
+        //     this.log("Failed to retrieve right lightstrip status:", JSON.stringify(err));
+        //   }
+        // }
 
-        try {
-          await this.snapi.outletStatus('4', ((data, err=null) => {
-            if (err) {
-              this.log.debug(data, err);
-            } else {
-              this.log.debug("left lightstrip outletStatus result:", data);
-              let outletStatus = JSON.parse(data);
-              if(outletStatus.hasOwnProperty('Error')) {
-                if (outletStatus.Error.Code === 404) {
-                  this.log("No left lightstrip detected");
-                } else {
-                  this.log("Unknown error occurred when checking the left lightstrip status. See previous output for more details. If it persists, please report this incident at https://github.com/DeeeeLAN/homebridge-sleepiq/issues/new");
-                }
-              } else {
-                this.hasLightstripLeft = true
-              }
-            }
-          }).bind(this));
-        } catch(err) {
-          if (typeof err === 'string' || err instanceof String)
-            err = JSON.parse(err)
-          if (!(err.statusCode === 404)) {
-            this.log("Failed to retrieve left lightstrip status:", JSON.stringify(err));
-          }
-        }
+        // try {
+        //   await this.snapi.outletStatus('4', ((data, err=null) => {
+        //     if (err) {
+        //       this.log.debug(data, err);
+        //     } else {
+        //       this.log.debug("left lightstrip outletStatus result:", data);
+        //       let outletStatus = JSON.parse(data);
+        //       if(outletStatus.hasOwnProperty('Error')) {
+        //         if (outletStatus.Error.Code === 404) {
+        //           this.log("No left lightstrip detected");
+        //         } else {
+        //           this.log("Unknown error occurred when checking the left lightstrip status. See previous output for more details. If it persists, please report this incident at https://github.com/DeeeeLAN/homebridge-sleepiq/issues/new");
+        //         }
+        //       } else {
+        //         this.hasLightstripLeft = true
+        //       }
+        //     }
+        //   }).bind(this));
+        // } catch(err) {
+        //   if (typeof err === 'string' || err instanceof String)
+        //     err = JSON.parse(err)
+        //   if (!(err.statusCode === 404)) {
+        //     this.log("Failed to retrieve left lightstrip status:", JSON.stringify(err));
+        //   }
+        // }
   
         // check if the foundation has foot warmers
-        try {
-          await this.snapi.footWarmingStatus(((data, err=null) => {
-            if (err) {
-              this.log.debug(data, err);
-            } else {
-              this.log.debug("footWarmingStatus result:", data);
-              let footWarmingStatus = JSON.parse(data);
-              if(footWarmingStatus.hasOwnProperty('Error')) {
-                if (footWarmingStatus.Error.Code === 404) {
-                  this.log("No foot warmer detected");
-                } else {
-                  this.log("Unknown error occurred when checking the foot warmer status. See previous output for more details. If it persists, please report this incident at https://github.com/DeeeeLAN/homebridge-sleepiq/issues/new");
-                }
-              } else {
-                this.hasWarmers = true
-              }
-            }
-          }).bind(this));
-        } catch(err) {
-          if (typeof err === 'string' || err instanceof String)
-            err = JSON.parse(err)
-          if (!(err.statusCode === 404)) {
-            this.log("Failed to retrieve foot warmer status:", JSON.stringify(err.error));
-          }
-        }
+        // try {
+        //   await this.snapi.footWarmingStatus(((data, err=null) => {
+        //     if (err) {
+        //       this.log.debug(data, err);
+        //     } else {
+        //       this.log.debug("footWarmingStatus result:", data);
+        //       let footWarmingStatus = JSON.parse(data);
+        //       if(footWarmingStatus.hasOwnProperty('Error')) {
+        //         if (footWarmingStatus.Error.Code === 404) {
+        //           this.log("No foot warmer detected");
+        //         } else {
+        //           this.log("Unknown error occurred when checking the foot warmer status. See previous output for more details. If it persists, please report this incident at https://github.com/DeeeeLAN/homebridge-sleepiq/issues/new");
+        //         }
+        //       } else {
+        //         this.hasWarmers = true
+        //       }
+        //     }
+        //   }).bind(this));
+        // } catch(err) {
+        //   if (typeof err === 'string' || err instanceof String)
+        //     err = JSON.parse(err)
+        //   if (!(err.statusCode === 404)) {
+        //     this.log("Failed to retrieve foot warmer status:", JSON.stringify(err.error));
+        //   }
+        // }
       }
 
-      // Check if bed has privacy mode
-      if(!this.accessories.has(bedID+'privacy')) {
-        this.log("Found Bed Privacy Switch: ", bedName);
+      // // Check if bed has privacy mode
+      // if(!this.accessories.has(bedID+'privacy')) {
+      //   this.log("Found Bed Privacy Switch: ", bedName);
         
-        let uuid = UUIDGen.generate(bedID+'privacy');
-        let bedPrivacy = new Accessory(bedName+'privacy', uuid);
+      //   let uuid = UUIDGen.generate(bedID+'privacy');
+      //   let bedPrivacy = new Accessory(bedName+'privacy', uuid);
         
-        bedPrivacy.context.sideID = bedID+'privacy';
-        bedPrivacy.context.type = 'privacy';
-        bedPrivacy.context.bedName = bedName;
+      //   bedPrivacy.context.sideID = bedID+'privacy';
+      //   bedPrivacy.context.type = 'privacy';
+      //   bedPrivacy.context.bedName = bedName;
         
-        bedPrivacy.addService(Service.Switch, bedName+'Privacy');
+      //   bedPrivacy.addService(Service.Switch, bedName+'Privacy');
         
-        let bedPrivacyAccessory = new snPrivacy(this.log, bedPrivacy, this.snapi);
-        bedPrivacyAccessory.getServices();
+      //   let bedPrivacyAccessory = new snPrivacy(this.log, bedPrivacy, this.snapi);
+      //   bedPrivacyAccessory.getServices();
         
-        this.api.registerPlatformAccessories('homebridge-sleepiq', 'SleepIQ', [bedPrivacy]);
-        this.accessories.set(bedID+'privacy', bedPrivacyAccessory);
-      } else {
-        this.log(bedName + " privacy already added from cache");
-      }
+      //   this.api.registerPlatformAccessories('homebridge-sleepiq', 'SleepIQ', [bedPrivacy]);
+      //   this.accessories.set(bedID+'privacy', bedPrivacyAccessory);
+      // } else {
+      //   this.log(bedName + " privacy already added from cache");
+      // }
       
       // function to register an occupancy sensor
-      const registerOccupancySensor = (sideName, sideID) => {
-        this.log("Found BedSide Occupancy Sensor: ", sideName);
+      // const registerOccupancySensor = (sideName, sideID) => {
+      //   this.log("Found BedSide Occupancy Sensor: ", sideName);
         
-        let uuid = UUIDGen.generate(sideID+'occupancy');
-        let bedSideOcc = new Accessory(sideName+'occupancy', uuid);
+      //   let uuid = UUIDGen.generate(sideID+'occupancy');
+      //   let bedSideOcc = new Accessory(sideName+'occupancy', uuid);
         
-        bedSideOcc.context.sideID = sideID+'occupancy';
-        bedSideOcc.context.type = 'occupancy';
+      //   bedSideOcc.context.sideID = sideID+'occupancy';
+      //   bedSideOcc.context.type = 'occupancy';
         
-        bedSideOcc.addService(Service.OccupancySensor, sideName+'Occupancy');
+      //   bedSideOcc.addService(Service.OccupancySensor, sideName+'Occupancy');
         
-        let bedSideOccAccessory = new snOccupancy(this.log, bedSideOcc);
-        bedSideOccAccessory.getServices();
+      //   let bedSideOccAccessory = new snOccupancy(this.log, bedSideOcc);
+      //   bedSideOccAccessory.getServices();
         
-        this.api.registerPlatformAccessories('homebridge-sleepiq', 'SleepIQ', [bedSideOcc]);
-        this.accessories.set(sideID+'occupancy', bedSideOccAccessory);
-      }
+      //   this.api.registerPlatformAccessories('homebridge-sleepiq', 'SleepIQ', [bedSideOcc]);
+      //   this.accessories.set(sideID+'occupancy', bedSideOccAccessory);
+      // }
       
       // loop through each bed side
       Object.keys(sides).forEach( function (bedside, index) {
@@ -559,30 +559,30 @@ class SleepIQPlatform {
         bedSideFlexAccessory.getServices();
         this.accessories.set(accessory.context.sideID, bedSideFlexAccessory);
         break;
-      case 'outlet':
-        accessory.reachable = true;
-        let bedSideOutletAccessory = new snOutlet(this.log, accessory, this.snapi);
-        bedSideOutletAccessory.getServices();
-        this.accessories.set(accessory.context.sideID, bedSideOutletAccessory);
-        break;
-      case 'lightstrip':
-        accessory.reachable = true;
-        let bedSideLightStripAccessory = new snLightStrip(this.log, accessory, this.snapi);
-        bedSideLightStripAccessory.getServices();
-        this.accessories.set(accessory.context.sideID, bedSideLightStripAccessory);
-        break;
-      case 'footwarmer':
-        accessory.reachable = true;
-        let bedSideFootWarmerAccessory = new snFootWarmer(this.log, accessory, this.snapi, this.warmingTimer);
-        bedSideFootWarmerAccessory.getServices();
-        this.accessories.set(accessory.context.sideID, bedSideFootWarmerAccessory);
-        break;
-      case 'privacy':
-        accessory.reachable = true;
-        let bedPrivacyAccessory = new snPrivacy(this.log, accessory, this.snapi);
-        bedPrivacyAccessory.getServices();
-        this.accessories.set(accessory.context.sideID, bedPrivacyAccessory);
-        break;
+      // case 'outlet':
+      //   accessory.reachable = true;
+      //   let bedSideOutletAccessory = new snOutlet(this.log, accessory, this.snapi);
+      //   bedSideOutletAccessory.getServices();
+      //   this.accessories.set(accessory.context.sideID, bedSideOutletAccessory);
+      //   break;
+      // case 'lightstrip':
+      //   accessory.reachable = true;
+      //   let bedSideLightStripAccessory = new snLightStrip(this.log, accessory, this.snapi);
+      //   bedSideLightStripAccessory.getServices();
+      //   this.accessories.set(accessory.context.sideID, bedSideLightStripAccessory);
+      //   break;
+      // case 'footwarmer':
+      //   accessory.reachable = true;
+      //   let bedSideFootWarmerAccessory = new snFootWarmer(this.log, accessory, this.snapi, this.warmingTimer);
+      //   bedSideFootWarmerAccessory.getServices();
+      //   this.accessories.set(accessory.context.sideID, bedSideFootWarmerAccessory);
+      //   break;
+      // case 'privacy':
+      //   accessory.reachable = true;
+      //   let bedPrivacyAccessory = new snPrivacy(this.log, accessory, this.snapi);
+      //   bedPrivacyAccessory.getServices();
+      //   this.accessories.set(accessory.context.sideID, bedPrivacyAccessory);
+      //   break;
       default:
         this.log("Unknown accessory type. Removing from accessory cache.");
       case 'remove':
