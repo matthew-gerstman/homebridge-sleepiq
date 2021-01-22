@@ -728,7 +728,7 @@ class SleepIQPlatform {
               return
             } else {
               // update side occupancy
-              let thisSideOccupied = sides[bedside].isInBed;
+              let thisSideOccupied = sides[bedside] && sides[bedside].isInBed;
               this.log.debug('SleepIQ Occupancy Data: {' + bedside + ':' + thisSideOccupied + '}')
               let bedSideOccAccessory = this.accessories.get(sideID+'occupancy');
               bedSideOccAccessory.setOccupancyDetected(thisSideOccupied);
