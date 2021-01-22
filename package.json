@@ -28,5 +28,8 @@
     "funding": {
         "type": "paypal",
         "url": "https://paypal.me/DeeeeLAN"
+    },
+    "devDependencies": {
+        "prettier": "^2.2.1"
     }
 }
