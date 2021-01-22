@@ -1044,7 +1044,7 @@ class snFlex {
   }
   
   // Send a new foundation position to the bed
-  setFoundation (actuator, value) {
+  async setFoundation (actuator, value) {
     let side = this.accessory.context.side;
     await this.waitForBedToStopMoving(); // wait for bed to stop moving
     this.log.debug('Setting foundation position='+value+' on side='+side+' for position='+actuator);
