@@ -1,18 +1,25 @@
 "use strict";
-var Accessory, Service, Characteristic, UUIDGen;
+import {
+  API as HomebridgeAPI,
+  PlatformAccessory,
+  Service as ServiceType,
+  Characteristic as CharacteristicType,
+} from "homebridge";
+
+import { uuid as UUIDGenType } from "hap-nodejs";
+
+let Accessory: typeof PlatformAccessory;
+let Service: typeof ServiceType;
+let Characteristic: typeof CharacteristicType;
+let UUIDGen: typeof UUIDGenType;
 var snapi = require("./API.js");
 
-module.exports = function (homebridge) {
+module.exports = function (homebridge: HomebridgeAPI) {
   Accessory = homebridge.platformAccessory;
   Service = homebridge.hap.Service;
   Characteristic = homebridge.hap.Characteristic;
   UUIDGen = homebridge.hap.uuid;
-  homebridge.registerPlatform(
-    "homebridge-sleepiq",
-    "SleepIQ",
-    SleepIQPlatform,
-    true
-  );
+  homebridge.registerPlatform("homebridge-sleepiq", "SleepIQ", SleepIQPlatform);
 };
 
 class SleepIQPlatform {
@@ -195,11 +202,8 @@ class SleepIQPlatform {
             bedSideNum.context.type = "number";
 
             bedSideNum.addService(Service.Lightbulb, sideName + "Number");
-            let numberService = bedSideNum.getService(
-              Service.Lightbulb,
-              sideName + "Number"
-            );
-            numberService.addCharacteristic(Characteristic.Brightness);
+            let numberService = bedSideNum.getService(Service.Lightbulb);
+            numberService!.addCharacteristic(Characteristic.Brightness);
 
             let bedSideNumAccessory = new snNumber(
               this.log,
@@ -217,49 +221,44 @@ class SleepIQPlatform {
           } else {
             this.log(sideName + " number control already added from cache");
           }
-
-          // check for foundation
-          if (this.hasFoundation) {
-            // register side foundation head and foot control units
-            if (!this.accessories.has(sideID + "flex")) {
-              this.log("Found BedSide Flex Foundation: ", sideName);
-
-              let uuid = UUIDGen.generate(sideID + "flex");
-              let bedSideFlex = new Accessory(sideName + "flex", uuid);
-
-              bedSideFlex.context.side = bedside[0].toUpperCase();
-              bedSideFlex.context.sideID = sideID + "flex";
-              bedSideFlex.context.sideName = sideName;
-              bedSideFlex.context.type = "flex";
-
-              bedSideFlex
-                .addService(Service.Lightbulb, sideName + "FlexHead", "head")
-                .addCharacteristic(Characteristic.Brightness);
-              bedSideFlex
-                .addService(Service.Lightbulb, sideName + "FlexFoot", "foot")
-                .addCharacteristic(Characteristic.Brightness);
-
-              let bedSideFlexAccessory = new snFlex(
-                this.log,
-                bedSideFlex,
-                this.snapi
-              );
-              bedSideFlexAccessory.getServices();
-
-              this.api.registerPlatformAccessories(
-                "homebridge-sleepiq",
-                "SleepIQ",
-                [bedSideFlex]
-              );
-              this.accessories.set(sideID + "flex", bedSideFlexAccessory);
-            } else {
-              this.log(sideName + " flex foundation already added from cache");
-            }
-          }
         } catch (err) {
           this.log("Error when setting up bedsides:", err);
         }
       });
+
+      // check for foundation
+      if (this.hasFoundation) {
+        // register side foundation head and foot control units
+        if (!this.accessories.has("Flex")) {
+          this.log("Found BedSide Flex Foundation: ");
+
+          let uuid = UUIDGen.generate("Flex");
+          let bedSideFlex = new Accessory("Flex", uuid);
+
+          bedSideFlex
+            .addService(Service.Lightbulb, "FlexHead", "head")
+            .addCharacteristic(Characteristic.Brightness);
+          bedSideFlex
+            .addService(Service.Lightbulb, "FlexFoot", "foot")
+            .addCharacteristic(Characteristic.Brightness);
+
+          let bedSideFlexAccessory = new snFlex(
+            this.log,
+            bedSideFlex,
+            this.snapi
+          );
+          bedSideFlexAccessory.getServices();
+
+          this.api.registerPlatformAccessories(
+            "homebridge-sleepiq",
+            "SleepIQ",
+            [bedSideFlex]
+          );
+          this.accessories.set("flex", bedSideFlexAccessory);
+        } else {
+          this.log(" Flex foundation already added from cache");
+        }
+      }
     });
   };
 
