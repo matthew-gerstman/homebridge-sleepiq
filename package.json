@@ -9,6 +9,7 @@
         "Sleep Number",
         "SleepIQ"
     ],
+    "main": "dist/index.js",
     "scripts": {
         "build": "tsc -p ."
     },
