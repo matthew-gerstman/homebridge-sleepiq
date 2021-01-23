@@ -143,123 +143,113 @@ class SleepIQPlatform {
       }
     }
 
-    // Loop through each bed
-    this.snapi.json.beds.forEach(async (bed, index) => {
-      let bedName = "bed" + index;
-      let bedID = bed.bedId;
-      let sides = JSON.parse(JSON.stringify(bed));
-      delete sides.status;
-      delete sides.bedId;
+    // Get first bed, we only have one.
+    const [bed] = this.snapi.json.beds;
 
-      // Check if there is a foundation attached
-      try {
-        await this.snapi.foundationStatus((data, err = null) => {
-          if (err) {
-            this.log.debug(data, err);
-          } else {
-            this.log.debug("foundationStatus result:", data);
-            let foundationStatus = JSON.parse(data);
-            if (foundationStatus.hasOwnProperty("Error")) {
-              if (foundationStatus.Error.Code === 404) {
-                this.log("No foundation detected");
-              } else {
-                this.log(
-                  "Unknown error occurred when checking the foundation status. See previous output for more details. If it persists, please report this incident at https://github.com/DeeeeLAN/homebridge-sleepiq/issues/new"
-                );
-              }
+    let bedName = "Bed";
+    let bedID = bed.bedId;
+    let sides = JSON.parse(JSON.stringify(bed));
+    delete sides.status;
+    delete sides.bedId;
+
+    // Check if there is a foundation attached
+    try {
+      await this.snapi.foundationStatus((data, err = null) => {
+        if (err) {
+          this.log.debug(data, err);
+        } else {
+          this.log.debug("foundationStatus result:", data);
+          let foundationStatus = JSON.parse(data);
+          if (foundationStatus.hasOwnProperty("Error")) {
+            if (foundationStatus.Error.Code === 404) {
+              this.log("No foundation detected");
             } else {
-              this.hasFoundation = true;
+              this.log(
+                "Unknown error occurred when checking the foundation status. See previous output for more details. If it persists, please report this incident at https://github.com/DeeeeLAN/homebridge-sleepiq/issues/new"
+              );
             }
-          }
-        });
-      } catch (err) {
-        if (typeof err === "string" || err instanceof String)
-          err = JSON.parse(err as string);
-        if (!(err.statusCode === 404)) {
-          this.log(
-            "Failed to retrieve foundation status:",
-            JSON.stringify(err)
-          );
-        }
-      }
-
-      // loop through each bed side
-      Object.keys(sides).forEach((bedside, index) => {
-        try {
-          let sideName = bedName + bedside;
-          let sideID = bedID + bedside;
-
-          // register side number control
-          if (!this.accessories.has(sideID + "number")) {
-            this.log("Found BedSide Number Control: ", sideName);
-
-            let uuid = UUIDGen.generate(sideID + "number");
-            let bedSideNum = new Accessory(sideName + "number", uuid);
-
-            bedSideNum.context.side = bedside[0].toUpperCase();
-            bedSideNum.context.sideID = sideID + "number";
-            bedSideNum.context.sideName = sideName;
-            bedSideNum.context.type = "number";
-
-            bedSideNum.addService(Service.Lightbulb, sideName + "Number");
-            let numberService = bedSideNum.getService(Service.Lightbulb);
-            numberService!.addCharacteristic(Characteristic.Brightness);
-
-            let bedSideNumAccessory = new snNumber(
-              this.log,
-              bedSideNum,
-              this.snapi
-            );
-            bedSideNumAccessory.getServices();
-
-            this.api.registerPlatformAccessories(
-              "homebridge-sleepiq",
-              "SleepIQ",
-              [bedSideNum]
-            );
-            this.accessories.set(sideID + "number", bedSideNumAccessory);
           } else {
-            this.log(sideName + " number control already added from cache");
+            this.hasFoundation = true;
           }
-        } catch (err) {
-          this.log("Error when setting up bedsides:", err);
         }
       });
-
-      // check for foundation
-      if (this.hasFoundation) {
-        // register side foundation head and foot control units
-        if (!this.accessories.has("Flex")) {
-          this.log("Found BedSide Flex Foundation: ");
-
-          let uuid = UUIDGen.generate("Flex");
-          let bedSideFlex = new Accessory("Flex", uuid);
-
-          bedSideFlex
-            .addService(Service.Lightbulb, "FlexHead", "head")
-            .addCharacteristic(Characteristic.Brightness);
-          bedSideFlex
-            .addService(Service.Lightbulb, "FlexFoot", "foot")
-            .addCharacteristic(Characteristic.Brightness);
-
-          let bedSideFlexAccessory = new snFlex(
-            this.log,
-            bedSideFlex,
-            this.snapi
-          );
-          bedSideFlexAccessory.getServices();
-
-          this.api.registerPlatformAccessories(
-            "homebridge-sleepiq",
-            "SleepIQ",
-            [bedSideFlex]
-          );
-          this.accessories.set("flex", bedSideFlexAccessory);
-        } else {
-          this.log(" Flex foundation already added from cache");
-        }
+    } catch (err) {
+      if (typeof err === "string" || err instanceof String)
+        err = JSON.parse(err as string);
+      if (!(err.statusCode === 404)) {
+        this.log("Failed to retrieve foundation status:", JSON.stringify(err));
       }
-    });
+    }
+
+    const [leftSide, rightSide] = Object.keys(sides);
+
+    try {
+      const accessoryName = "SleepNumber";
+
+      // register side number control
+      if (!this.accessories.has(accessoryName)) {
+        this.log("Found BedSide Number Control: ", accessoryName);
+
+        let uuid = UUIDGen.generate("SleepNumber");
+        let bedSideNum = new Accessory("SleepNumber", uuid);
+
+        bedSideNum
+          .addService(Service.Lightbulb, leftSide)
+          .addCharacteristic(Characteristic.Brightness);
+
+        bedSideNum
+          .addService(Service.Lightbulb, rightSide)
+          .addCharacteristic(Characteristic.Brightness);
+
+        let bedSideNumAccessory = new snNumber(
+          this.log,
+          bedSideNum,
+          this.snapi
+        );
+        bedSideNumAccessory.getServices();
+
+        this.api.registerPlatformAccessories("homebridge-sleepiq", "SleepIQ", [
+          bedSideNum,
+        ]);
+        this.accessories.set(accessoryName, bedSideNumAccessory);
+      } else {
+        this.log(accessoryName + " number control already added from cache");
+      }
+    } catch (err) {
+      this.log("Error when setting up bedsides:", err);
+    }
+
+    // check for foundation
+    if (this.hasFoundation) {
+      // register side foundation head and foot control units
+      if (!this.accessories.has("Flex")) {
+        this.log("Found BedSide Flex Foundation: ");
+
+        let uuid = UUIDGen.generate("Flex");
+        let bedSideFlex = new Accessory("Flex", uuid);
+
+        bedSideFlex
+          .addService(Service.Lightbulb, "FlexHead", "head")
+          .addCharacteristic(Characteristic.Brightness);
+        bedSideFlex
+          .addService(Service.Lightbulb, "FlexFoot", "foot")
+          .addCharacteristic(Characteristic.Brightness);
+
+        let bedSideFlexAccessory = new snFlex(
+          this.log,
+          bedSideFlex,
+          this.snapi
+        );
+        bedSideFlexAccessory.getServices();
+
+        this.api.registerPlatformAccessories("homebridge-sleepiq", "SleepIQ", [
+          bedSideFlex,
+        ]);
+        this.accessories.set("flex", bedSideFlexAccessory);
+      } else {
+        this.log(" Flex foundation already added from cache");
+      }
+    }
   };
 
   removeAccessory = (side) => {
