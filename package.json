@@ -11,8 +11,10 @@
     ],
     "main": "dist/index.js",
     "scripts": {
+        "precommit-msg": "echo 'Building...' && exit 0",
         "build": "tsc -p ."
     },
+    "pre-commit": [ "precommit-msg", "build" ],
     "engines": {
         "node": ">=0.12.0",
         "homebridge": ">=0.2.0"
@@ -26,6 +28,7 @@
     "devDependencies": {
         "@tsconfig/node14": "^1.0.0",
         "@types/node": "^14.14.22",
+        "pre-commit": "^1.2.2",
         "prettier": "^2.2.1",
         "typescript": "^4.1.3"
     }

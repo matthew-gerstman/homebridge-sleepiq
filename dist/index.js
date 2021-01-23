@@ -106,10 +106,10 @@ class SleepIQPlatform {
                     let uuid = UUIDGen.generate("SleepNumber");
                     let bedSideNum = new Accessory("SleepNumber", uuid);
                     bedSideNum
-                        .addService(Service.Lightbulb, leftSide)
+                        .addService(Service.Lightbulb, "SleepNumberLeft", leftSide)
                         .addCharacteristic(Characteristic.Brightness);
                     bedSideNum
-                        .addService(Service.Lightbulb, rightSide)
+                        .addService(Service.Lightbulb, "SleepNumberLeft", rightSide)
                         .addCharacteristic(Characteristic.Brightness);
                     let bedSideNumAccessory = new snNumber(this.log, bedSideNum, this.snapi);
                     bedSideNumAccessory.getServices();
